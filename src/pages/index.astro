@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Base title="My Blog" description="Writing on software, SEO, and building things.">
+  <section>
+    <h1 class="text-3xl font-bold text-white mb-2" style="letter-spacing: -0.03em;">Posts</h1>
+    <p class="mb-10" style="color: var(--muted);">Writing on software, SEO, and building things.</p>
+
+    {posts.length === 0 ? (
+      <p style="color: var(--muted);">No posts yet. Drop a .md file in src/content/posts/ to get started.</p>
+    ) : (
+      <ul class="flex flex-col gap-8">
+        {posts.map((post) => {
+          const date = post.data.pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          });
+          return (
+            <li>
+              <a href={`/posts/${post.id}`} class="group block no-underline" style="color: inherit;">
+                <div class="flex items-start justify-between gap-4 mb-1">
+                  <h2
+                    class="text-lg font-semibold text-white group-hover:underline"
+                    style="text-decoration-color: var(--accent);"
+                  >
+                    {post.data.title}
+                  </h2>
+                  <time
+                    datetime={post.data.pubDate.toISOString()}
+                    class="text-sm shrink-0 mt-0.5 font-mono"
+                    style="color: var(--muted);"
+                  >
+                    {date}
+                  </time>
+                </div>
+                <p class="text-sm" style="color: var(--muted);">{post.data.description}</p>
+                {post.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5 mt-2">
+                    {post.data.tags.map((tag) => (
+                      <span
+                        class="text-xs px-1.5 py-0.5 rounded font-mono"
+                        style="background: var(--surface); border: 1px solid var(--border); color: var(--muted);"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    )}
+  </section>
+</Base>

@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<Base title={`#${tag}`} description={`Posts tagged with #${tag}`}>
+  <section>
+    <a href="/" class="text-sm mb-6 inline-block" style="color: var(--muted);">← All posts</a>
+    <h1 class="text-2xl font-bold text-white mb-8" style="letter-spacing: -0.03em;">
+      #{tag}
+      <span class="text-base font-normal ml-2" style="color: var(--muted);">{posts.length} post{posts.length !== 1 ? 's' : ''}</span>
+    </h1>
+    <ul class="flex flex-col gap-6">
+      {posts.map((post) => (
+        <li>
+          <a href={`/posts/${post.id}`} class="group no-underline" style="color: inherit;">
+            <h2 class="font-semibold text-white group-hover:underline" style="text-decoration-color: var(--accent);">
+              {post.data.title}
+            </h2>
+            <p class="text-sm mt-1" style="color: var(--muted);">{post.data.description}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>

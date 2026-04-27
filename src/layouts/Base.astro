@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = 'A blog built with Astro, Tailwind, and MDX.',
+  canonicalUrl = Astro.url.href,
+  ogImage,
+} = Astro.props;
+
+const siteName = 'My Blog';
+const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Sticky header with glassmorphism -->
+    <header
+      class="sticky top-0 z-50 border-b"
+      style="
+        background: rgba(10,10,10,0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-color: var(--border);
+      "
+    >
+      <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+        <a
+          href="/"
+          class="text-white font-semibold tracking-tight no-underline hover:opacity-100"
+          style="color: #fff;"
+        >
+          My Blog
+        </a>
+        <nav class="flex gap-6 text-sm" style="color: var(--muted);">
+          <a href="/" style="color: var(--muted);">Posts</a>
+          <a href="/rss.xml" style="color: var(--muted);">RSS</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-3xl mx-auto w-full px-4 py-12">
+      <slot />
+    </main>
+
+    <footer class="border-t py-8 text-center text-sm" style="border-color: var(--border); color: var(--muted);">
+      <div class="max-w-3xl mx-auto px-4">
+        © {new Date().getFullYear()} My Blog · Built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>
+      </div>
+    </footer>
+  </body>
+</html>
