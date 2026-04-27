@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Logo from '../components/Logo.astro';
 
 interface Props {
   title: string;
@@ -51,6 +52,7 @@ const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
   </head>
   <body class="min-h-screen flex flex-col">
     <!-- Sticky header with glassmorphism -->
@@ -66,10 +68,11 @@ const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
       <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
         <a
           href="/"
-          class="text-white font-semibold tracking-tight no-underline hover:opacity-100"
-          style="color: #fff;"
+          class="flex items-center gap-2.5 no-underline hover:opacity-90"
+          style="color: #fff; transition: opacity 100ms;"
         >
-          My Blog
+          <Logo size={28} />
+          <span class="font-semibold tracking-tight" style="letter-spacing: -0.02em;">My Blog</span>
         </a>
         <nav class="flex gap-6 text-sm" style="color: var(--muted);">
           <a href="/" style="color: var(--muted);">Posts</a>
