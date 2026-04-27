@@ -5,12 +5,12 @@
 
 @layer base {
   :root {
-    --accent: #a78bfa;
-    --bg: #0f0f17;
-    --surface: #16161f;
-    --border: #2a2a3a;
-    --text: #e4e4e7;
-    --muted: #71717a;
+    --accent: #f97316;
+    --bg: #0a0f1e;
+    --surface: #101728;
+    --border: #1e2d45;
+    --text: #e2e8f0;
+    --muted: #64748b;
   }
 
   html {
